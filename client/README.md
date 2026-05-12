@@ -94,6 +94,7 @@ Ensure the following tables exist:
 ### 2. Start Backend
 
 cd server
+npm install
 node index.js
 
 Server runs on:
@@ -108,6 +109,7 @@ npm run dev
 Frontend runs on:
 http://localhost:5174
 
+## 4. Demo Login
 Username: Belal
 Password: 123456
 ---
@@ -189,4 +191,4 @@ The application allows users to:
 
 ## Author
 
-Belal Omar
+Belal Omar (Solo Assignment)
