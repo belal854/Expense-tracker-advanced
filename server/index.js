@@ -9,13 +9,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const SECRET = "secretkey";
+// Change this if needed for your local setup
+const SECRET = "your_jwt_secret_key";
 
 // ================= DB =================
+// Update these MySQL details to match your own local MySQL setup
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "belal1234",
+  password: "your_mysql_password",
   database: "expense_tracker",
 });
 
