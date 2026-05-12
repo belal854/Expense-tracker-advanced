@@ -17,7 +17,7 @@ const SECRET = "your_jwt_secret_key";
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "belal1234",
+  password: "YOUR_MYSQL_PASSWORD",
   database: "expense_tracker",
 });
 

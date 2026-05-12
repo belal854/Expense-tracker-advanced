@@ -80,19 +80,19 @@ expense-tracker-advanced/
 
 ### 1. Setup Database
 
-Open MySQL Workbench and run:
+Open MySQL Workbench and run the provided ExpenseTracker.sql file.
 
-USE expense_tracker;
-
-Ensure the following tables exist:
-
-* users
-* expenses
-* categories
-* user_activity
+This will automatically create:
+- expense_tracker database
+- users table
+- expenses table
+- categories table
+- user_activity table
 
 ### 2. Start Backend
+Before running the backend, update the MySQL password inside server/index.js with your local MySQL password.
 
+And then run: 
 cd server
 npm install
 node index.js
