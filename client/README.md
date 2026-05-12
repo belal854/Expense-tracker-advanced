@@ -107,7 +107,7 @@ npm install
 npm run dev
 
 Frontend runs on:
-http://localhost:5174
+http://localhost:5173
 
 ## 4. Demo Login
 Username: Belal
