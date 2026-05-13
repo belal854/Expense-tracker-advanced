@@ -13,9 +13,9 @@ The application implements a role-based authentication system where users and ad
 
 ---
 
-# Features
+## Features
 
-## Authentication
+### Authentication
 
 - Secure login using JWT
 - Password hashing using bcrypt
@@ -24,7 +24,7 @@ The application implements a role-based authentication system where users and ad
 
 ---
 
-# User Dashboard Features
+## User Dashboard Features
 
 Normal users can:
 
@@ -38,7 +38,7 @@ Normal users can:
 
 ---
 
-# Admin Dashboard Features
+## Admin Dashboard Features
 
 Admins can:
 
@@ -53,15 +53,15 @@ Admins can:
 
 ---
 
-# Technology Stack
+## Technology Stack
 
-## Frontend
+### Frontend
 
 - React (Vite)
 - JavaScript
 - CSS
 
-## Backend
+### Backend
 
 - Node.js
 - Express.js
@@ -69,34 +69,39 @@ Admins can:
 - bcrypt
 - mysql2
 - cors
+- dotenv
 
-## Database
+### Database
 
 - MySQL
 
 ---
 
-# Database Tables
+## Database Tables
 
-## users
+### users
+
 Stores:
 - username
 - email
 - hashed password
 - role (admin or user)
 
-## expenses
+### expenses
+
 Stores user expense records.
 
-## categories
+### categories
+
 Stores predefined expense categories.
 
-## user_activity
+### user_activity
+
 Stores user actions and timestamps.
 
 ---
 
-# Project Structure
+## Project Structure
 
 expense-tracker-advanced/
 │
@@ -111,56 +116,113 @@ expense-tracker-advanced/
 │
 ├── server/
 │   ├── index.js
+│   ├── .env
 │   └── package.json
 │
 ├── ExpenseTracker.sql
 └── README.md
 
-# How to Run the Application
+---
 
-## 1. Setup Database
+## How to Run the Application
+
+### 1. Setup Database
 
 Open MySQL Workbench.
 
-Run the provided:
+Open and run:
 
 ExpenseTracker.sql
 
-This automatically creates:
+This will automatically create:
 
-expense_tracker database
-users table
-expenses table
-categories table
-user_activity table
+- expense_tracker database
+- users table
+- expenses table
+- categories table
+- user_activity table
 
-It also inserts:
+It will also insert:
 
-sample admin account
-sample user account
-sample expense data
+- demo admin account
+- demo user accounts
+- sample expense data
+- sample activity logs
 
-## 2. Start Backend
+---
+
+### 2. Configure Environment Variables
+
+Inside the server folder, create a file called:
+
+.env
+
+Paste this inside:
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=YOUR_MYSQL_PASSWORD
+DB_NAME=expense_tracker
+JWT_SECRET=expense_tracker_secret_key
+
+Replace:
+
+YOUR_MYSQL_PASSWORD
+
+with your actual MySQL password.
+
+---
+
+### 3. Start Backend
+
+Open a terminal:
+
 cd server
 npm install
+npm install dotenv
 node index.js
 
-Before running:
-update the MySQL password inside:
-server/index.js
+Backend runs on:
 
-Server runs on:
 http://localhost:5000
 
-## 3. Start Frontend
+---
+
+### 4. Start Frontend
 
 Open another terminal:
+
 cd client
 npm install
 npm run dev
 
 Frontend runs on:
+
 http://localhost:5173
 
+---
 
 ## Demo Accounts
+
+### Admin Account
+
+Email: admin@test.com
+Password: 123456
+
+---
+
+### User Accounts
+
+belal@test.com
+sarah@test.com
+ahmed@test.com
+mia@test.com
+james@test.com
+aisha@test.com
+daniel@test.com
+layla@test.com
+omar@test.com
+
+Password for all users:
+
+123456
