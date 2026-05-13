@@ -1,3 +1,4 @@
+
 * {
   box-sizing: border-box;
 }
@@ -302,10 +303,17 @@ button {
   font-weight: 700;
 }
 
+/* ================= ADMIN TABLE ================= */
+.admin-table .table-header,
+.admin-table .table-row {
+  grid-template-columns: 1.4fr 1.7fr 0.8fr 1.5fr 1.4fr;
+}
+
 /* ================= BUTTONS ================= */
 .action-buttons {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .edit-btn {
@@ -380,16 +388,14 @@ button {
 
   .form-grid,
   .table-header,
-  .table-row {
+  .table-row,
+  .admin-table .table-header,
+  .admin-table .table-row {
     grid-template-columns: 1fr;
   }
 
   .full-width {
     grid-column: span 1;
-  }
-
-  .action-buttons {
-    flex-wrap: wrap;
   }
 
   .expense-header {

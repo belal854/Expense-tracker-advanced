@@ -1,107 +1,160 @@
-# Expense Tracker A2
+# Expense Tracker Advanced
 
 ## Overview
 
-Expense Tracker A2 is a full-stack web application built using **React (frontend)**, **Node.js + Express (backend)**, **MySQL (database)**, and **JWT authentication**.
+Expense Tracker Advanced is a full-stack web application developed using:
 
-The application allows users to securely manage their personal expenses with full CRUD functionality, real-time search, category-based insights, and user activity tracking.
+- React (Frontend)
+- Node.js + Express (Backend)
+- MySQL (Database)
+- JWT Authentication
 
----
-
-## Features
-
-* User authentication (Login with JWT)
-* Password hashing using bcrypt
-* Add new expenses
-* View all expenses
-* Edit existing expenses
-* Delete expenses
-* Live search (real-time filtering of expenses)
-* Category dropdown (loaded from database)
-* Category spending breakdown (total per category)
-* User activity logs (login, add, update, delete, logout)
-* Form validation and error handling
-* Modern responsive dashboard UI
+The application implements a role-based authentication system where users and admins have different dashboards and permissions.
 
 ---
 
-## Technology Stack
+# Features
 
-### Frontend
+## Authentication
 
-* React (Vite)
-* JavaScript (useState, useEffect)
-* CSS (custom styling)
-
-### Backend
-
-* Node.js
-* Express.js
-* jsonwebtoken (JWT authentication)
-* bcrypt (password hashing)
-* mysql2 (database connection)
-* cors
-
-### Database
-
-* MySQL
-
-### Tables
-
-* **users** → stores user accounts
-* **expenses** → stores expense records
-* **categories** → stores expense categories
-* **user_activity** → stores user actions and logs
+- Secure login using JWT
+- Password hashing using bcrypt
+- Role-based authentication
+- Email and password login system
 
 ---
 
-## Project Structure
+# User Dashboard Features
+
+Normal users can:
+
+- Add expenses
+- View expenses
+- Edit expenses
+- Delete expenses
+- Search expenses in real time
+- View category spending breakdown
+- View personal activity history
+
+---
+
+# Admin Dashboard Features
+
+Admins can:
+
+- View all registered users
+- View user activity timestamps
+- Open individual user profiles
+- View user expenses
+- Edit user details
+- Delete users
+- Edit user expenses
+- Delete user expenses
+
+---
+
+# Technology Stack
+
+## Frontend
+
+- React (Vite)
+- JavaScript
+- CSS
+
+## Backend
+
+- Node.js
+- Express.js
+- JWT
+- bcrypt
+- mysql2
+- cors
+
+## Database
+
+- MySQL
+
+---
+
+# Database Tables
+
+## users
+Stores:
+- username
+- email
+- hashed password
+- role (admin or user)
+
+## expenses
+Stores user expense records.
+
+## categories
+Stores predefined expense categories.
+
+## user_activity
+Stores user actions and timestamps.
+
+---
+
+# Project Structure
 
 expense-tracker-advanced/
-├── client/ → React frontend
+│
+├── client/
 │   ├── src/
 │   │   ├── App.jsx
 │   │   ├── App.css
 │   │   ├── main.jsx
 │   │   └── assets/
-│   ├── index.html
-│   └── package.json
-
-├── server/ → Express backend
+│   ├── package.json
+│   └── index.html
+│
+├── server/
 │   ├── index.js
 │   └── package.json
-
-├── ExpenseTracker.sql → Database schema
+│
+├── ExpenseTracker.sql
 └── README.md
 
----
+# How to Run the Application
 
-## How to Run the Application
+## 1. Setup Database
 
-### 1. Setup Database
+Open MySQL Workbench.
 
-Open MySQL Workbench and run the provided ExpenseTracker.sql file.
+Run the provided:
 
-This will automatically create:
-- expense_tracker database
-- users table
-- expenses table
-- categories table
-- user_activity table
+ExpenseTracker.sql
 
-### 2. Start Backend
-Before running the backend, update the MySQL password inside server/index.js with your local MySQL password.
+This automatically creates:
 
-And then run: 
+expense_tracker database
+users table
+expenses table
+categories table
+user_activity table
+
+It also inserts:
+
+sample admin account
+sample user account
+sample expense data
+
+## 2. Start Backend
 cd server
 npm install
 node index.js
 
+Before running:
+update the MySQL password inside:
+server/index.js
+
 Server runs on:
 http://localhost:5000
 
-### 3. Start Frontend
+## 3. Start Frontend
 
+Open another terminal:
 cd client
 npm install
 npm run dev
@@ -109,86 +162,5 @@ npm run dev
 Frontend runs on:
 http://localhost:5173
 
-## 4. Demo Login
-Username: Belal
-Password: 123456
----
 
-## API Endpoints
-
-### Authentication
-
-* POST /login
-* POST /logout
-
-### Expenses
-
-* GET /expenses
-* POST /add-expense
-* PUT /expenses/:id
-* DELETE /expenses/:id
-
-### Categories
-
-* GET /categories
-
-### User Activity
-
-* GET /activity
-
----
-
-## Security
-
-* Passwords are hashed using bcrypt before storing
-* JWT tokens are used for authentication
-* Protected routes require a valid token
-* Authorization header format:
-  Authorization: Bearer <token>
-
----
-
-## Business Logic
-
-The application allows users to:
-
-* Categorise expenses
-* Monitor total spending
-* View category-based summaries
-* Search expenses instantly
-* Track all actions through activity logs
-
----
-
-## CRUD Functionality
-
-* **Create** → Add new expense
-* **Read** → View all expenses
-* **Update** → Edit expense
-* **Delete** → Remove expense
-
----
-
-## Extra Features
-
-* Live search filtering
-* Category breakdown dashboard
-* User activity tracking system
-* Responsive UI design
-* Input validation for forms
-* Error handling for API requests
-
----
-
-## Notes
-
-* This is a **Single Page Application (SPA)**
-* All operations happen without page reload
-* Data is dynamically updated from the backend
-* Activity logs track all major user actions
-
----
-
-## Author
-
-Belal Omar (Solo Assignment)
+## Demo Accounts

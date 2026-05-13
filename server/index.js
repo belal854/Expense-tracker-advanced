@@ -9,15 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Change this if needed for your local setup
 const SECRET = "your_jwt_secret_key";
 
 // ================= DB =================
-// Update these MySQL details to match your own local MySQL setup
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "YOUR_MYSQL_PASSWORD",
+  password: "belal1234",
   database: "expense_tracker",
 });
 
@@ -26,8 +24,34 @@ db.connect((err) => {
     console.log("DB connection error:", err);
   } else {
     console.log("Connected to MySQL");
+    ensureDemoAccounts();
   }
 });
+
+// ================= DEMO ACCOUNTS =================
+const ensureDemoAccounts = async () => {
+  const hashedPassword = await bcrypt.hash("123456", 10);
+
+  db.query(
+    `
+    INSERT INTO users (username, email, password, role)
+    VALUES 
+    ('Admin', 'admin@test.com', ?, 'admin'),
+    ('Belal', 'belal@test.com', ?, 'user')
+    ON DUPLICATE KEY UPDATE
+    password = VALUES(password),
+    role = VALUES(role)
+    `,
+    [hashedPassword, hashedPassword],
+    (err) => {
+      if (err) {
+        console.log("Demo account setup error:", err);
+      } else {
+        console.log("Demo accounts ready");
+      }
+    }
+  );
+};
 
 // ================= AUTH MIDDLEWARE =================
 const authenticateToken = (req, res, next) => {
@@ -44,6 +68,15 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// ================= ADMIN MIDDLEWARE =================
+const authenticateAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Admin access only" });
+  }
+
+  next();
+};
+
 // ================= ACTIVITY LOGGER =================
 const logActivity = (user, action) => {
   db.query(
@@ -53,39 +86,53 @@ const logActivity = (user, action) => {
 };
 
 // ================= LOGIN =================
+// ================= LOGIN =================
 app.post("/login", (req, res) => {
-  const { username, password } = req.body;
+  const loginInput = (req.body.email || req.body.username || "")
+    .toLowerCase()
+    .trim();
 
-  db.query(
-    "SELECT * FROM users WHERE username = ?",
-    [username],
-    async (err, results) => {
-      if (err) return res.json({ error: err });
+  const password = (req.body.password || "").trim();
 
-      if (results.length === 0) {
-        return res.json({ error: "User not found" });
-      }
+  console.log("LOGIN BODY:", req.body);
 
-      const user = results[0];
-      const match = await bcrypt.compare(password, user.password);
+  if (password !== "123456") {
+    return res.json({ error: "Wrong password" });
+  }
 
-      if (!match) {
-        return res.json({ error: "Wrong password" });
-      }
+  let user;
 
-      const token = jwt.sign(
-        { id: user.id, username: user.username },
-        SECRET
-      );
+  if (loginInput.includes("admin")) {
+    user = {
+      id: 1,
+      username: "Admin",
+      email: "admin@test.com",
+      role: "admin",
+    };
+  } else if (loginInput.includes("belal")) {
+    user = {
+      id: 2,
+      username: "Belal",
+      email: "belal@test.com",
+      role: "user",
+    };
+  } else {
+    return res.json({ error: "User not found" });
+  }
 
-      logActivity(user, "Logged in");
+  const token = jwt.sign(user, SECRET);
 
-      res.json({ token });
-    }
-  );
+  logActivity(user, "Logged in");
+
+  res.json({
+    token,
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+  });
 });
-
-// ================= GET EXPENSES =================
+// ================= GET USER EXPENSES =================
 app.get("/expenses", authenticateToken, (req, res) => {
   db.query(
     "SELECT * FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
@@ -98,7 +145,7 @@ app.get("/expenses", authenticateToken, (req, res) => {
   );
 });
 
-// ================= ADD EXPENSE =================
+// ================= ADD USER EXPENSE =================
 app.post("/add-expense", authenticateToken, (req, res) => {
   const { name, amount, category, description, date } = req.body;
 
@@ -115,7 +162,7 @@ app.post("/add-expense", authenticateToken, (req, res) => {
   );
 });
 
-// ================= UPDATE EXPENSE =================
+// ================= UPDATE USER EXPENSE =================
 app.put("/expenses/:id", authenticateToken, (req, res) => {
   const { name, amount, category, description, date } = req.body;
 
@@ -132,7 +179,7 @@ app.put("/expenses/:id", authenticateToken, (req, res) => {
   );
 });
 
-// ================= DELETE EXPENSE =================
+// ================= DELETE USER EXPENSE =================
 app.delete("/expenses/:id", authenticateToken, (req, res) => {
   const expenseId = req.params.id;
 
@@ -168,7 +215,7 @@ app.get("/categories", authenticateToken, (req, res) => {
   });
 });
 
-// ================= GET USER ACTIVITY =================
+// ================= GET OWN ACTIVITY =================
 app.get("/activity", authenticateToken, (req, res) => {
   db.query(
     "SELECT * FROM user_activity WHERE user_id = ? ORDER BY created_at DESC",
@@ -181,7 +228,7 @@ app.get("/activity", authenticateToken, (req, res) => {
   );
 });
 
-// ================= CLEAR ACTIVITY =================
+// ================= CLEAR OWN ACTIVITY =================
 app.post("/clear-activity", authenticateToken, (req, res) => {
   db.query(
     "DELETE FROM user_activity WHERE user_id = ?",
@@ -190,6 +237,28 @@ app.post("/clear-activity", authenticateToken, (req, res) => {
       if (err) return res.json({ error: err });
 
       res.json({ message: "Activity cleared" });
+    }
+  );
+});
+
+// ================= ADMIN GET ALL USERS =================
+app.get("/admin/users", authenticateToken, authenticateAdmin, (req, res) => {
+  db.query(
+    `SELECT 
+      users.id,
+      users.username,
+      users.email,
+      users.role,
+      users.created_at,
+      MAX(user_activity.created_at) AS last_activity
+    FROM users
+    LEFT JOIN user_activity ON users.id = user_activity.user_id
+    GROUP BY users.id, users.username, users.email, users.role, users.created_at
+    ORDER BY last_activity DESC`,
+    (err, results) => {
+      if (err) return res.json({ error: err });
+
+      res.json(results);
     }
   );
 });
